@@ -1,0 +1,54 @@
+[
+  {
+    "company_name": "Inoxplasma",
+    "website": "https://www.inoxplasma.com.br/",
+    "country": "Brazil",
+    "customer_type": "distributor",
+    "product_match": ["sheet_plate", "angle_channel"],
+    "qualification_status": "REVIEW",
+    "evidence": {
+      "url": "https://www.inoxplasma.com.br/produtos/linha-distribuicao/",
+      "excerpt": "Linha de Distribuição; Chapa - Normal; Cantoneira Laminada"
+    },
+    "purchase_intent": "unknown"
+  },
+  {
+    "company_name": "Inox do Brasil",
+    "website": "https://www.inoxdobrasil.com.br/",
+    "country": "Brazil",
+    "customer_type": "distributor",
+    "product_match": ["sheet_plate", "angle_channel"],
+    "qualification_status": "REVIEW",
+    "evidence": {
+      "url": "https://www.inoxdobrasil.com.br/",
+      "excerpt": "Somos uma distribuidora de Aço Inox; Chapas; Cantoneiras"
+    },
+    "purchase_intent": "unknown"
+  },
+  {
+    "company_name": "Açotubo",
+    "website": "https://acotubo.com.br/",
+    "country": "Brazil",
+    "customer_type": "distributor",
+    "product_match": ["sheet_plate", "coil_strip", "angle_channel"],
+    "qualification_status": "REVIEW",
+    "evidence": {
+      "url": "https://acotubo.com.br/produtos/aco-inox/",
+      "excerpt": "Aços Inoxidáveis; Chapas; Bobinas; Cantoneiras"
+    },
+    "purchase_intent": "unknown"
+  },
+  {
+    "company_name": "Arinox",
+    "website": "https://www.arinox.com.br/",
+    "country": "Brazil",
+    "customer_type": "distributor",
+    "product_match": ["sheet_plate"],
+    "qualification_status": "REVIEW",
+    "evidence": {
+      "url": "https://www.arinox.com.br/",
+      "excerpt": "Distribuímos Aço inoxidável; Chapa de Aço Inox"
+    },
+    "purchase_intent": "unknown"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "sample": true,
+  "sample_records": 4,
+  "qualification_status_counts": {
+    "HIGH": 0,
+    "REVIEW": 4,
+    "LOW": 0
+  },
+  "contains_public_emails": false,
+  "contains_raw_api_payloads": false,
+  "note": "Illustrative public schema sample only. Qualification status does not prove purchase intent or business truth."
+}

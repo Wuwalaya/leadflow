@@ -1,6 +1,6 @@
 # LeadFlow
 
-> Given a target market and product, discover, enrich, classify and rank potential B2B leads from public web sources.
+> LeadFlow is an AI-assisted B2B lead generation and sales intelligence pipeline that turns a target market + product into evidence-backed, deduplicated prospect accounts.
 
 LeadFlow is a reusable Python CLI prototype for evidence-backed account discovery. It searches the public web, prefers official company sites, extracts limited evidence, applies deterministic safeguards, uses TypeSafe Jev for semantic qualification, and persists deduplicated accounts in SQLite.
 

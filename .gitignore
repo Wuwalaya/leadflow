@@ -23,6 +23,13 @@ test_results.txt
 # Local development materials; never include in the public repository.
 .agents/
 .codex/
-AGENTS.md
 Handoff.md
 INTERVIEW_BRIEF.md
+INTERVIEW_DEMO.md
+.vscode/
+.aws/
+*.pem
+*.key
+
+# Windows download metadata
+*:Zone.Identifier

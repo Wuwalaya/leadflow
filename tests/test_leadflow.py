@@ -1,6 +1,7 @@
+"""Offline regressions; email literals use reserved example domains."""
 import copy, json, tempfile, unittest
 from pathlib import Path
-from leadflow import JEV_ENDPOINT, JEV_MODEL, Store, candidate_rejection, contacts, csv_safe, export_discovery, format_top_candidates, host, market_discovery_queries, name_key, observed_company_name, qualification_bucket, relevant_evidence, rule_classify, query_plan, llm_classify, jev_smoke
+from leadflow import JEV_ENDPOINT, JEV_MODEL, Store, candidate_rejection, contacts, csv_safe, export_discovery, format_run_funnel, format_top_candidates, host, market_discovery_queries, name_key, observed_company_name, qualification_bucket, relevant_evidence, rule_classify, query_plan, llm_classify, jev_smoke
 from unittest.mock import patch
 
 class LeadFlowTests(unittest.TestCase):
@@ -10,14 +11,14 @@ class LeadFlowTests(unittest.TestCase):
     def test_names_accents_and_suffixes(self):
         self.assertEqual(name_key('Açotubo LTDA'), name_key('ACOTUBO'))
     def test_email_only_observed_company_domain(self):
-        ps = [{'url': 'https://inox.example.br', 'text': 'vendas@inox.example.br agency@webdesign.example.br dpo@inox.example.br example@example.com'}]
+        ps = [{'url': 'https://inox.example', 'text': 'vendas@inox.example agency@webdesign.example dpo@inox.example example@example.com'}]
         got = contacts(ps)
-        self.assertEqual([x['value'] for x in got], ['vendas@inox.example.br'])
+        self.assertEqual([x['value'] for x in got], ['vendas@inox.example'])
         self.assertEqual(got[0]['role'], 'sales')
     def test_missing_email_stays_empty(self):
-        self.assertEqual(contacts([{'url':'https://inox.example.br', 'text':'contact form only [email protected]'}]), [])
+        self.assertEqual(contacts([{'url':'https://inox.example', 'text':'contact form only [email protected]'}]), [])
     def test_bars_do_not_imply_flat_bar(self):
-        x = rule_classify([{'url':'https://inox.example.br', 'text':'Distribuidora Aço Inox\nBarras\nSão Paulo'}], 'Stainless Steel', 'Brazil', 'profiles', 'Example')
+        x = rule_classify([{'url':'https://inox.example', 'text':'Distribuidora Aço Inox\nBarras\nSão Paulo'}], 'Stainless Steel', 'Brazil', 'profiles', 'Example')
         self.assertEqual(x['product_matches'], [])
     def test_br_domain_not_country_evidence(self):
         x = rule_classify([{'url':'https://inox.example.br', 'text':'Stainless Steel'}], 'Stainless Steel', 'Brazil', 'both', 'Example')
@@ -28,7 +29,7 @@ class LeadFlowTests(unittest.TestCase):
     def test_csv_formula_guard(self):
         self.assertTrue(csv_safe(' =HYPERLINK("bad")').startswith("'"))
     def new_record(self, **kw):
-        x = {'company_name': 'Example Inox', 'domain':'example.com.br', 'run_id':'test-run'}
+        x = {'company_name': 'Example Inox', 'domain':'example.com', 'run_id':'test-run'}
         x.update(kw); return x
     def test_rerun_is_idempotent_and_preserves_sales_state(self):
         with tempfile.TemporaryDirectory() as d:
@@ -61,10 +62,10 @@ class LeadFlowTests(unittest.TestCase):
     def test_invalid_llm_quotes_are_removed(self):
         class FakeAPI:
             def post(self,*args):
-                obj = {'company_name':'Invented', 'name_evidence':{'url':'https://example.com.br','quote':'not there'},'customer_type':'distributor','type_evidence':{'url':'https://example.com.br','quote':'not there'},'country_match': True, 'country_evidence':None, 'material_evidence':None,'product_matches':[{'form':'flat_bar','evidence':{'url':'https://example.com.br','quote':'invented'}}]}
+                obj = {'company_name':'Invented', 'name_evidence':{'url':'https://example.com','quote':'not there'},'customer_type':'distributor','type_evidence':{'url':'https://example.com','quote':'not there'},'country_match': True, 'country_evidence':None, 'material_evidence':None,'product_matches':[{'form':'flat_bar','evidence':{'url':'https://example.com','quote':'invented'}}]}
                 return {'choices':[{'message':{'content':json.dumps(obj)}}]}
         with patch.dict('os.environ', {'LLM_MODEL':'test', 'LLM_API_KEY':'fake-not-live'}):
-            x = llm_classify(FakeAPI(), [{'url':'https://example.com.br','text':'actual page'}], 'Stainless Steel','Brazil','both')
+            x = llm_classify(FakeAPI(), [{'url':'https://example.com','text':'actual page'}], 'Stainless Steel','Brazil','both')
         self.assertEqual(x['customer_type'], 'unknown'); self.assertFalse(x['country_match']); self.assertEqual(x['product_matches'], [])
     def test_jev_smoke_uses_pinned_model_and_validates_typed_answers(self):
         class FakeAPI:
@@ -87,8 +88,8 @@ class LeadFlowTests(unittest.TestCase):
         fixture = {
             'companies': [{
                 'company_name': 'Example Inox',
-                'website': 'https://example.com.br/',
-                'pages': [{'url': 'https://example.com.br/', 'text': 'Distribuidora de aço inox e chapas'}],
+                'website': 'https://example.com/',
+                'pages': [{'url': 'https://example.com/', 'text': 'Distribuidora de aço inox e chapas'}],
             }]
         }
         with tempfile.TemporaryDirectory() as d:
@@ -103,10 +104,10 @@ class LeadFlowTests(unittest.TestCase):
         self.assertEqual(result['answers']['buyer_role']['choice'], 'distributor')
     def test_discovery_filter_rejects_non_company_results(self):
         self.assertEqual(candidate_rejection({'url':'https://www.linkedin.com/company/inox', 'title':'Inox'}), 'invalid_or_blocked_url')
-        self.assertEqual(candidate_rejection({'url':'https://example.com.br/blog/noticia-inox', 'title':'Notícia'}), 'search_news_or_blog_page')
+        self.assertEqual(candidate_rejection({'url':'https://example.com/blog/noticia-inox', 'title':'Notícia'}), 'search_news_or_blog_page')
         self.assertEqual(candidate_rejection({'url':'https://evento.com.br/expositor/inox', 'title':'Inox'}), 'search_news_or_blog_page')
         self.assertEqual(candidate_rejection({'url':'https://www.turkishexporter.com.tr/en/companies/inox', 'title':'Inox'}), 'directory_marketplace_or_search_host')
-        self.assertIsNone(candidate_rejection({'url':'https://example.com.br/produtos/aco-inox', 'title':'Example Inox'}))
+        self.assertIsNone(candidate_rejection({'url':'https://example.com/produtos/aco-inox', 'title':'Example Inox'}))
     def test_relevant_evidence_keeps_product_lines_and_drops_noise(self):
         text = 'Política de cookies e navegação\nDistribuímos aço inoxidável em chapas e bobinas no Brasil.\nTermos gerais do website'
         self.assertEqual(relevant_evidence(text), 'Distribuímos aço inoxidável em chapas e bobinas no Brasil.')
@@ -126,13 +127,16 @@ class LeadFlowTests(unittest.TestCase):
     def test_domain_dedup_updates_discovery_columns_and_export(self):
         with tempfile.TemporaryDirectory() as d:
             store = Store(str(Path(d) / 'db.sqlite'))
-            first = self.new_record(company_name='Example Inox', website='https://example.com.br/', country='Brazil', customer_type='distributor', emails=['sales@example.com.br'], product_relevance=.9, qualification_status='HIGH', evidence_urls=['https://example.com.br/inox'])
+            first = self.new_record(company_name='Example Inox', website='https://example.com/', country='Brazil', customer_type='distributor', emails=['sales@example.com'], product_relevance=.9, qualification_status='HIGH', evidence_urls=['https://example.com/inox'])
             aid, action = store.upsert(first)
-            second = dict(first, company_name='Example Inox Group', run_id='run-2')
+            second = dict(first, company_name='Example Inox Group', run_id='run-2',
+                          name_reason='self_declaration', name_evidence={
+                              'url': 'https://example.com/about',
+                              'quote': 'Example Inox Group is a distributor.'})
             bid, action2 = store.upsert(second)
             self.assertEqual((aid, action, bid, action2), (aid, 'new', aid, 'existing_updated'))
             row = store.db.execute('SELECT canonical_company_name,website,country,customer_type,product_relevance,qualification_status FROM accounts WHERE id=?', (aid,)).fetchone()
-            self.assertEqual(row, ('Example Inox Group','https://example.com.br/','Brazil','distributor',.9,'HIGH'))
+            self.assertEqual(row, ('Example Inox Group','https://example.com/','Brazil','distributor',.9,'HIGH'))
             record = dict(second, account_id=aid, dedup_action=action2, canonical_company_name='Example Inox Group', product_match=['sheet_plate'], evidence_summary='Official evidence', review_notes='Prototype heuristic')
             summary = {'run_id':'run-2'}
             export_discovery(Path(d), [record], summary, store)
@@ -154,5 +158,25 @@ class LeadFlowTests(unittest.TestCase):
         self.assertNotIn('Company 11', table)
         self.assertIn('HIGH: 5 | REVIEW: 7 | Public email: 3', table)
         self.assertIn('sales@example.com', table)
+    def test_run_funnel_table_contains_counts_usage_and_target(self):
+        table = format_run_funnel({
+            'search_results': 109, 'unique_domains_before_limit': 43, 'unique_domains': 43,
+            'rejected_deterministic': 43, 'evidence_candidates': 37,
+            'jev_high_match': 16, 'jev_review': 8, 'jev_low_match': 13, 'jev_unclassified': 0,
+            'existing_accounts': 0, 'new_accounts': 37, 'accounts_with_public_email': 9,
+            'final_qualified_leads': 24, 'target': 15, 'target_met': True,
+            'tavily_calls_including_retries': 27, 'tavily_credits_reported': 31,
+            'jev_calls_including_retries': 6,
+            'jev_tokens': {'input_tokens': 40611, 'output_tokens': 5052},
+            'wall_clock_seconds': 124.91, 'errors': [{'stage': 'extract'}],
+        })
+        self.assertIn('Run Funnel', table)
+        self.assertIn('Search results', table)
+        self.assertIn('Final qualified leads', table)
+        self.assertIn('Target: 15 | Met: YES', table)
+        self.assertIn('API Usage', table)
+        self.assertIn('Jev input tokens', table)
+        self.assertIn('Recorded errors', table)
+        self.assertNotIn('{', table)
 
 if __name__ == '__main__': unittest.main(verbosity=2)

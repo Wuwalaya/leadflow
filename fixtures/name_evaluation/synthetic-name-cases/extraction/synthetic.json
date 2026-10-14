@@ -1,0 +1,13 @@
+{
+  "source_mode": "synthetic_offline_fixture_not_api_response",
+  "results": [
+    {
+      "url": "https://alloy.example/",
+      "raw_content": "Example Alloy Supply is a distributor of stainless steel sheet in United States.\n[Contact](/contact)"
+    },
+    {
+      "url": "https://ambiguous.example/",
+      "raw_content": "Our Companies\nExample Brand is a distributor.\nExample Holdings Headquarters"
+    }
+  ]
+}

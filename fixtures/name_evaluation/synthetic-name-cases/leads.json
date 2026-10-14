@@ -1,0 +1,24 @@
+[
+  {
+    "domain": "alloy.example",
+    "company_name": "Stainless Steel Flat Bar Supplier | Example Alloy Supply",
+    "website": "https://alloy.example/",
+    "qualification_status": "REVIEW",
+    "emails": [],
+    "evidence_urls": [
+      "https://alloy.example/"
+    ],
+    "source_mode": "synthetic_offline_fixture_not_discovery"
+  },
+  {
+    "domain": "ambiguous.example",
+    "company_name": "ambiguous",
+    "website": "https://ambiguous.example/",
+    "qualification_status": "REVIEW",
+    "emails": [],
+    "evidence_urls": [
+      "https://ambiguous.example/"
+    ],
+    "source_mode": "synthetic_offline_fixture_not_discovery"
+  }
+]

@@ -1,34 +1,27 @@
 {
-  "description": "Four curated examples based on public official-company pages read on 2026-09-21. These short excerpts are not complete crawl snapshots and test downstream processing only; they do not demonstrate a live discovery run or purchasing intent.",
+  "description": "合成离线测试数据 / SYNTHETIC OFFLINE FIXTURE. Fictional companies and excerpts; reserved .example URLs. No web retrieval, real contacts, live discovery or business validation.",
+  "dataset_role": "synthetic_offline_fixture",
   "companies": [
     {
-      "company_name": "Inoxplasma",
-      "website": "https://www.inoxplasma.com.br/",
+      "company_name": "Example Alloy Supply",
+      "website": "https://alloy.example/",
       "pages": [
-        {"url": "https://www.inoxplasma.com.br/", "text": "Grupo Inoxplasma\nAÇO INOXIDÁVEL\nSão Paulo - SP", "retrieved_at": "2026-09-21", "source_mode": "curated_official_excerpt_not_live_crawl"},
-        {"url": "https://www.inoxplasma.com.br/produtos/linha-distribuicao/", "text": "Linha de Distribuição\nBarra Quadrada\nBarra Redonda\nBarra Sextavada\nCantoneira Laminada\nChapa - Normal", "retrieved_at": "2026-09-21", "source_mode": "curated_official_excerpt_not_live_crawl"}
+        {
+          "url": "https://alloy.example/",
+          "text": "Example Alloy Supply is a distributor.\nDistribuidora de aço inoxidável\nChapas e bobinas\nSão Paulo, Brasil",
+          "source_mode": "synthetic_offline_fixture_not_web_evidence"
+        }
       ]
     },
     {
-      "company_name": "Inox do Brasil",
-      "website": "https://www.inoxdobrasil.com.br/",
+      "company_name": "Example Profile Supply",
+      "website": "https://profiles.example/",
       "pages": [
-        {"url": "https://www.inoxdobrasil.com.br/", "text": "Inox do Brasil\nSomos uma distribuidora de Aço Inox\nChapas\nBarras\nCantoneiras\nBlumenau - SC", "retrieved_at": "2026-09-21", "source_mode": "curated_official_excerpt_not_live_crawl"}
-      ]
-    },
-    {
-      "company_name": "Açotubo",
-      "website": "https://acotubo.com.br/",
-      "pages": [
-        {"url": "https://acotubo.com.br/", "text": "Grupo Açotubo\namplo estoque\nGuarulhos-SP", "retrieved_at": "2026-09-21", "source_mode": "curated_official_excerpt_not_live_crawl"},
-        {"url": "https://acotubo.com.br/produtos/aco-inox/", "text": "Aços Inoxidáveis\nChapas\nBobinas\nFitas e Blanks\nTubos\nBarras\nCantoneiras", "retrieved_at": "2026-09-21", "source_mode": "curated_official_excerpt_not_live_crawl"}
-      ]
-    },
-    {
-      "company_name": "Arinox",
-      "website": "https://www.arinox.com.br/",
-      "pages": [
-        {"url": "https://www.arinox.com.br/", "text": "Arinox\nDistribuímos Aço inoxidável\nBarra de Aço Inox\nChapa de Aço Inox\nSão Paulo - SP", "retrieved_at": "2026-09-21", "source_mode": "curated_official_excerpt_not_live_crawl"}
+        {
+          "url": "https://profiles.example/",
+          "text": "Example Profile Supply is a distributor.\nDistribuidora de aço inox\nBarras chatas e cantoneiras\nBlumenau, Brasil",
+          "source_mode": "synthetic_offline_fixture_not_web_evidence"
+        }
       ]
     }
   ]
